@@ -1,0 +1,43 @@
+---
+- name: dotfiles | Clone Dotfiles
+  shell: |
+    git clone --recurse-submodules -j8 https://github.com/mbrav/dotfiles --branch {{ common_dotfile_version }} /tmp/dotfiles
+- name: dotfiles | Applay configs to user
+  synchronize:
+    mode: push
+    src: "/tmp/dotfiles/dotfiles/{{ item.file }}"
+    dest: "/home/{{ users[inventory_hostname].name }}/{{ item.file }}"
+    archive: false
+    recursive: true
+    use_ssh_args: true
+  delegate_to: "{{ inventory_hostname }}"
+  loop:
+    - file: .config/
+    - file: .vimrc
+    - file: .bashrc
+- name: dotfiles | Applay configs directory to user
+  file:
+    path: "/home/{{ users[inventory_hostname].name }}/.config"
+    owner: "{{ users[inventory_hostname].name }}"
+    group: "{{ users[inventory_hostname].name }}"
+    mode: '744'
+    recurse: true
+- name: dotfiles | Applay configs to user
+  file:
+    path: "/home/{{ users[inventory_hostname].name }}/{{ item.file }}"
+    owner: "{{ users[inventory_hostname].name }}"
+    group: "{{ users[inventory_hostname].name }}"
+    mode: '644'
+  loop:
+    - file: .vimrc
+    - file: .bashrc
+- name: dotfiles | Applay starship configs
+  replace:
+    path: /home/{{ users[inventory_hostname].name }}/.config/starship.toml
+    regexp: "'default'$"
+    replace: "'{{ users[inventory_hostname].starship_theme }}'"
+    mode: "644"
+- name: dotfiles | Delete tmp repository
+  file:
+    state: absent
+    path: /tmp/dotfiles

@@ -1,0 +1,17 @@
+---
+- name: "Add apps for master"
+  hosts: master
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: true
+        state: present
+    - name: Install kubectl
+      package:
+        name:
+          - kubectl
+        state: present
+    - name: Hold packages
+      dpkg_selections:
+        name: kubectl
+        selection: hold

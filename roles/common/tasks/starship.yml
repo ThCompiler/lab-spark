@@ -1,0 +1,14 @@
+---
+- name: starship | Download install script
+  get_url:
+    url: https://starship.rs/install.sh
+    dest: ./install.sh
+    mode: "0644"
+- name: starship | Install
+  shell: |
+    export FORCE=1 && sh install.sh
+  changed_when: true
+- name: starship | Delete install script
+  file:
+    state: absent
+    path: ./install.sh

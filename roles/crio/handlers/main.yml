@@ -1,0 +1,11 @@
+---
+- name: Reload systemd
+  systemd_service:
+    daemon_reload: true
+  listen: systemd_reload
+
+- name: Restart crio
+  service:
+    name: crio
+    state: restarted
+  listen: docker_restart

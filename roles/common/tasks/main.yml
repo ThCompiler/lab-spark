@@ -1,0 +1,86 @@
+---
+- name: "Check packages"
+  package_facts:
+    manager: "auto"
+
+- name: Create hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    mode: "0644"
+
+- name: Update APT cache
+  apt:
+    update_cache: true
+    state: present
+
+- name: Upgrade APT
+  apt:
+    upgrade: "full"
+    state: present
+
+- name: Install packages
+  package:
+    name:
+      - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+      - rsync
+      - gnupg
+      - curl
+      - wget
+      - htop
+      - git
+      - vim
+      - nano
+      - net-tools
+      - tmux
+      - fzf
+      - exa
+      - bat
+      - jq
+      - dnsutils
+      - tcpdump
+      - lvm2
+    state: present
+
+- name: Disable swap
+  shell: |
+    swapoff -a
+  changed_when: false
+
+- name: Enable kernel modules
+  shell: |
+    modprobe overlay -v
+    modprobe br_netfilter -v
+    echo "overlay" >> /etc/modules
+    echo "br_netfilter" >> /etc/modules
+  changed_when: true
+
+- name: Enable port forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Install fish
+  include_tasks: fish.yml
+  when: "'fish' not in ansible_facts.packages"
+
+- name: Install starship
+  include_tasks: starship.yml
+
+- name: Install mcfly
+  include_tasks: mcfly.yml
+
+- name: Link batcat to cat
+  file:
+    dest: /usr/local/bin/bat
+    src: /usr/bin/batcat
+    state: link
+  changed_when: true
+
+- name: Apply Dotfiles
+  include_tasks: dotfiles.yml

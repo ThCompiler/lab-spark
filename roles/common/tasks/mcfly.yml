@@ -1,0 +1,13 @@
+---
+- name: mcfly | Download install script
+  get_url:
+    url: https://raw.githubusercontent.com/cantino/mcfly/master/ci/install.sh
+    dest: ./install.sh
+    mode: "0644"
+- name: mcfly | Install
+  command: sh ./install.sh -- --force --git cantino/mcfly
+  changed_when: true
+- name: mcfly | Delete install script
+  file:
+    state: absent
+    path: ./install.sh

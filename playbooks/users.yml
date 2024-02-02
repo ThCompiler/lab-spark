@@ -1,0 +1,6 @@
+---
+- name: "Add Users"
+  hosts: workers, master
+  roles:
+    - name: users
+      tags: users

@@ -1,0 +1,55 @@
+---
+- name: Set repository
+  template:
+    src: "{{ item.template }}.j2"
+    dest: /etc/apt/sources.list.d/{{ item.dest }}
+    mode: "0644"
+  with_items:
+    - template: devel:kubic:libcontainers:stable.list
+      dest: devel:kubic:libcontainers:stable.list
+    - template: devel:kubic:libcontainers:stable:cri-o:version.list
+      dest: devel:kubic:libcontainers:stable:cri-o:{{ crio_version }}.list
+- name: Download repository key
+  get_url:
+    url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable{{ item.name }}"
+    dest: ./{{ item.new_name }}.key
+    mode: "0644"
+  with_items:
+    - name: :/cri-o:/{{ crio_version }}/{{ crio_host_os }}/Release.key
+      new_name: "cri-o_{{ crio_version }}_{{ crio_host_os }}"
+    - name: /{{ crio_host_os }}/Release.key
+      new_name: "cri-o_{{ crio_host_os }}"
+  changed_when: true
+- name: Set repository key
+  shell: set -o pipefail && cat ./{{ item }}.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/{{ item }}.gpg > /dev/null
+  args:
+    executable: /bin/bash
+  with_items:
+    - "cri-o_{{ crio_version }}_{{ crio_host_os }}"
+    - "cri-o_{{ crio_host_os }}"
+  changed_when: true
+- name: Clear tmp files
+  file:
+    state: absent
+    path: ./{{ item }}.key
+  with_items:
+    - "cri-o_{{ crio_version }}_{{ crio_host_os }}"
+    - "cri-o_{{ crio_host_os }}"
+  changed_when: true
+- name: Update apt
+  apt:
+    update_cache: true
+    state: present
+- name: Install
+  package:
+    name:
+      - cri-o
+      - cri-o-runc
+    state: present
+- name: Add handlers
+  meta: flush_handlers
+- name: Start crio service
+  service:
+    name: crio
+    state: started
+    enabled: true

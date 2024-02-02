@@ -1,0 +1,12 @@
+# Main options
+
+users:
+  master:
+    name: "master"
+    starship_theme: "nord-red"
+  worker1:
+    name: "worker"
+    starship_theme: "nord-tan"
+  worker2:
+    name: "worker"
+    starship_theme: "default"

@@ -1,0 +1,6 @@
+---
+- name: Reload sshd service
+  service:
+    name: sshd
+    state: reloaded
+  listen: sshd_reload

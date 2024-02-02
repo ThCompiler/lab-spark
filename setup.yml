@@ -1,0 +1,4 @@
+---
+- import_playbook: playbooks/all_hosts.yml
+- import_playbook: playbooks/master.yml
+- import_playbook: playbooks/users.yml

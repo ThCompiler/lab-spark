@@ -1,0 +1,20 @@
+---
+- name: "Add basic commands"
+  hosts: workers, master
+  tasks:
+    - name: "Check packages"
+      package_facts:
+        manager: "auto"
+  roles:
+    - name: users
+      tags: users
+    - name: common
+      tags: common
+    - name: sshd
+      tags: sshd
+    - name: crio
+      tags: crio
+      when: "'cri-o' not in ansible_facts.packages and 'cri-o-runc' not in ansible_facts.packages"  
+    - name: kubernetes
+      tags: kubernetes
+      when: "'kubeadm' not in ansible_facts.packages and 'kubelet' not in ansible_facts.packages and 'kubectl' not in ansible_facts.packages"  

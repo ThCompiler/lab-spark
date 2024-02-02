@@ -1,0 +1,47 @@
+---
+- name: Install sudo
+  package:
+    name:
+      sudo
+    state: present
+
+- name: Ensure groups wheel and remote exists
+  group:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - remote
+    - wheel
+
+- name: Add users to wheel and remote groups
+  user:
+    user: "{{ users[inventory_hostname].name }}"
+    group: "{{ users[inventory_hostname].name }}"
+    groups: wheel,remote
+    append: true
+    state: present
+  when: inventory_hostname in users
+
+- name: Edit sudoers file
+  copy:
+    src: sudoers
+    dest: /etc/sudoers
+    backup: true
+    mode: "0440"
+    owner: root
+    group: root
+    validate: ‘visudo -cf %s’
+
+- name: Edit locale file
+  template:
+    src: locale.gen.j2
+    dest: /etc/locale.gen
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Ensure a locale exists
+  locale_gen:
+    name: "{{ item.code }}"
+    state: present
+  with_items: "{{ users_locales }}"
