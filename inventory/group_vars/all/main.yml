@@ -9,4 +9,4 @@ users:
     starship_theme: "nord-tan"
   worker2:
     name: "worker"
-    starship_theme: "nord-blue"
+    starship_theme: "default"

@@ -1,7 +1,7 @@
 ---
 - name: dotfiles | Clone Dotfiles
   shell: |
-    git clone --recurse-submodules -j8 https://github.com/mbrav/dotfiles --branch {{ common_dotfile_version }} /tmp/dotfiles
+    git clone --recurse-submodules -j8 https://github.com/ThCompiler/dotfiles.git --branch maint /tmp/dotfiles
 - name: dotfiles | Applay configs to user
   synchronize:
     mode: push
