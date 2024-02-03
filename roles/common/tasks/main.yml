@@ -9,15 +9,11 @@
     dest: /etc/hosts
     mode: "0644"
 
-- name: Update APT cache
-  apt:
-    update_cache: true
-    state: present
-
 - name: Upgrade APT
   apt:
     upgrade: "full"
     state: present
+    update_cache: true
 
 - name: Install packages
   package:
