@@ -38,6 +38,7 @@
       - dnsutils
       - tcpdump
       - lvm2
+    use: "apt"
     state: present
 
 - name: Disable swap
