@@ -30,7 +30,7 @@
     mode: "0440"
     owner: root
     group: root
-    validate: ‘visudo -cf %s’
+    validate: "visudo -cf %s"
 
 - name: Edit locale file
   template:
