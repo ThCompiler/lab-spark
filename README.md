@@ -40,6 +40,7 @@ ansible-playbook playbooks/master.yml
 
 ```cmd
 sudo kubeadm init --pod-network-cidr=10.100.0.0/16 --dry-run
+sudo kubeadm init --pod-network-cidr=10.100.0.0/16
 https://habr.com/ru/articles/734928/
 Настройка kubectl
 mkdir -p $HOME/.kube
