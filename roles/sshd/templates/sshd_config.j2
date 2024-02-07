@@ -11,6 +11,8 @@
 # possible, but leave them commented.  Uncommented options override the
 # default value.
 
+Include /etc/ssh/sshd_config.d/*.conf
+
 Port 22
 #AddressFamily any
 #ListenAddress 0.0.0.0
@@ -38,7 +40,8 @@ AllowGroups remote
 
 #PubkeyAuthentication yes
 
-# Expect .ssh/authorized_keys2 to be disregarded by default in future.
+
+### Expect .ssh/authorized_keys2 to be disregarded by default in future.
 #AuthorizedKeysFile	.ssh/authorized_keys .ssh/authorized_keys2
 
 #AuthorizedPrincipalsFile none
