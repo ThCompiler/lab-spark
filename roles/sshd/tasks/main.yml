@@ -1,4 +1,9 @@
 ---
+- name: Add sshd_config include dir
+  file: 
+    path: "/etc/ssh/sshd_config.d"
+    state: directory
+
 - name: Create config
   template:
     src: sshd_config.j2
