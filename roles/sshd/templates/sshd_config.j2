@@ -63,7 +63,7 @@ PasswordAuthentication no
 
 # Change to yes to enable challenge-response passwords (beware issues with
 # some PAM modules and threads)
-ChallengeResponseAuthentication no
+KbdInteractiveAuthentication no
 
 # Kerberos options
 #KerberosAuthentication no
@@ -86,7 +86,7 @@ ChallengeResponseAuthentication no
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-UsePAM no
+UsePAM yes
 
 AllowAgentForwarding yes
 #AllowTcpForwarding yes
