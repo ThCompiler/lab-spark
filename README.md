@@ -49,3 +49,11 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 sudo kubeadm token create --print-join-command
 ```
+
+## В случае перезапуска
+
+Если вы перезапустили мастера кубер может обратно не подняться. Тогда необходимо выполнить две следующие строчки:
+```cmd
+sudo swapoff -a
+sudo systemctl start kubelet
+```
