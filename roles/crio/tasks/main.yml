@@ -5,9 +5,9 @@
     dest: /etc/apt/sources.list.d/{{ item.dest }}
     mode: "0644"
   with_items:
-    - template: devel:kubic:libcontainers:stable.list
+    - template: deve.stable.list
       dest: devel:kubic:libcontainers:stable.list
-    - template: devel:kubic:libcontainers:stable:cri-o:version.list
+    - template: deve.stable.version.list
       dest: devel:kubic:libcontainers:stable:cri-o:{{ crio_version }}.list
 - name: Download repository key
   get_url:
