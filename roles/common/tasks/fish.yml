@@ -1,7 +1,7 @@
 ---
 - name: fish | Set repository
   template:
-    src: shells:fish:release:3.list.j2
+    src: fish.list.j2
     dest: /etc/apt/sources.list.d/shells:fish:release:3.list
     mode: "0644"
   changed_when: true
