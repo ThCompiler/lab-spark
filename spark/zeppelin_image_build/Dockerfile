@@ -15,7 +15,7 @@
 # This image relies on the zeppelin-build image to get the zeppelin
 # binaries built, and the Makefile to put it in this directory.
 
-FROM thecompiler/spark:3.4.2_v1
+FROM thecompiler1941/spark:3.4.2_v1
 
 ENV ZEPPELIN_VER  0.11.0
 
