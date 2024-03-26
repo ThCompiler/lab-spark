@@ -15,7 +15,7 @@ RUN apt-get update && \
 # is all we need.)
 RUN mkdir -p /opt && \
     cd /opt && \
-    curl https://archive.apache.org/dist/hadoop/core/hadoop-${hadoop_ver}/hadoop-${hadoop_ver}.tar.gz | \
+    curl https://dlcdn.apache.org/hadoop/common/hadoop-${hadoop_ver}/hadoop-${hadoop_ver}.tar.gz | \
         tar -zx hadoop-${hadoop_ver}/lib/native && \
     ln -s hadoop-${hadoop_ver} hadoop && \
     echo Hadoop ${hadoop_ver} native libraries installed in /opt/hadoop/lib/native
@@ -23,7 +23,7 @@ RUN mkdir -p /opt && \
 # Get Spark from US Apache mirror.
 RUN mkdir -p /opt && \
     cd /opt && \
-    curl -L http://www.us.apache.org/dist/spark/spark-${spark_ver}/spark-${spark_ver}-bin-hadoop3.tgz | \
+    curl -L https://dlcdn.apache.org/spark/spark-${spark_ver}/spark-${spark_ver}-bin-hadoop3.tgz | \
         tar -zx && \
     ln -s spark-${spark_ver}-bin-hadoop3 spark && \
     echo Spark ${spark_ver} installed in /opt
