@@ -10,11 +10,11 @@ TAG = 3.4.2_v1
 ZEPPELIN_TAG = 0.10.0_v1
 
 spark:
-	docker build -t thecompiler/spark .
+	docker build -t thecompiler/spark ./spark_image_build/
 	docker tag thecompiler/spark:$(TAG)
 
 zeppelin:
-	docker build -t thecompiler/zeppelin zeppelin
+	docker build -t thecompiler/zeppelin ./zeppelin_image_build/
 	docker tag -f thecompiler/zeppelin:$(ZEPPELIN_TAG)
 
 push-spark: spark
