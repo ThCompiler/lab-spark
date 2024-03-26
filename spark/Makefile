@@ -10,24 +10,24 @@ TAG = 3.4.2_v1
 ZEPPELIN_TAG = 0.10.0_v1
 
 spark:
-	docker build -t thecompiler/spark ./spark_image_build/
-	docker tag thecompiler/spark thecompiler/spark:$(TAG)
+	docker build -t thecompiler1941/spark ./spark_image_build/
+	docker tag thecompiler1941/spark thecompiler1941/spark:$(TAG)
 
 zeppelin:
-	docker build -t thecompiler/zeppelin ./zeppelin_image_build/
-	docker tag -f thecompiler/zeppelin thecompiler/zeppelin:$(ZEPPELIN_TAG)
+	docker build -t thecompiler1941/zeppelin ./zeppelin_image_build/
+	docker tag thecompiler1941/zeppelin thecompiler1941/zeppelin:$(ZEPPELIN_TAG)
 
 push-spark: spark
-	docker push thecompiler/spark
-	docker push thecompiler/spark:$(TAG)
+	docker push thecompiler1941/spark
+	docker push thecompiler1941/spark:$(TAG)
 
 push-zeppelin: zeppelin
-	docker push thecompiler/zeppelin
-	docker push thecompiler/zeppelin:$(ZEPPELIN_TAG)
+	docker push thecompiler1941/zeppelin
+	docker push thecompiler1941/zeppelin:$(ZEPPELIN_TAG)
 
 clean:
-	docker rmi thecompiler/spark:$(TAG) || :
-	docker rmi thecompiler/spark || :
+	docker rmi thecompiler1941/spark:$(TAG) || :
+	docker rmi thecompiler1941/spark || :
 
-	docker rmi thecompiler/zeppelin:$(ZEPPELIN_TAG) || :
-	docker rmi thecompiler/zeppelin || :
+	docker rmi thecompiler1941/zeppelin:$(ZEPPELIN_TAG) || :
+	docker rmi thecompiler1941/zeppelin || :

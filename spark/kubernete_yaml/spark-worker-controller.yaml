@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: spark-worker
-          image: thecompiler/spark:3.4.2_v1
+          image: thecompiler1941/spark:3.4.2_v1
           command: ["/start-worker"]
           ports:
             - containerPort: 8081
