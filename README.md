@@ -62,7 +62,7 @@ curl -O https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests
 Обновляем ip под выбранный нами диапазон
 
 ```cmd
-sed -ie 's/192.168.0.0/10.24.0.0/g' custom-resources.yaml
+sed -ie 's/192.168.0.0/12.24.0.0/g' custom-resources.yaml
 ```
 
 Применяем аддон
