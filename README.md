@@ -56,6 +56,13 @@ sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://raw.githubus
 sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods -A
 ```
 
+Если они не запустились, возможно данная команда поможет
+```cmd
+update-alternatives --set iptables /usr/sbin/iptables-legacy
+update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+```
+
+
 Удаляем стандартный proxy
 ```cmd
 sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl -n kube-system delete ds kube-proxy
