@@ -41,14 +41,35 @@ ansible-playbook playbooks/master.yml
 ```
 
 ```cmd
-sudo kubeadm init --pod-network-cidr=10.100.0.0/16 --dry-run
-sudo kubeadm init --pod-network-cidr=10.100.0.0/16
-https://habr.com/ru/articles/734928/
-Настройка kubectl
+sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.5.0.0/16 --dry-run
+sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.5.0.0/16
+```
+
+Устанавливаем аддон для сети
+
+```cmd
+sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features.yaml
+```
+
+Проверяем что kube-router работает
+```cmd
+sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods -A
+```
+
+Удаляем стандартный proxy
+```cmd
+sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl -n kube-system delete ds kube-proxy
+```
+
+Настриваем kubectl
+```cmd
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
 
+Из этой команды получаем инструкцию для подключения node
+```cmd 
 sudo kubeadm token create --print-join-command
 ```
 
