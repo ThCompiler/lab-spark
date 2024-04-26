@@ -32,7 +32,7 @@
       - net-tools
       - tmux
       - fzf
-      - exa
+      #- exa
       - bat
       - jq
       - dnsutils
