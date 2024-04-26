@@ -41,8 +41,8 @@ ansible-playbook playbooks/master.yml
 ```
 
 ```cmd
-sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.5.0.0/16 --dry-run
-sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.5.0.0/16
+sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.24.0.0/16 --dry-run
+sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.24.0.0/16
 ```
 
 Устанавливаем аддон для сети
