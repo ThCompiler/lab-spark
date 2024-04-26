@@ -76,11 +76,6 @@ kubectl create -f custom-resources.yaml
 kubectl get pods -A
 ```
 
-Если они не запустились, возможно данная команда поможет
-```cmd
-update-alternatives --set iptables /usr/sbin/iptables-legacy
-update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-```
 
 Из этой команды получаем инструкцию для подключения node
 ```cmd 
@@ -94,3 +89,14 @@ sudo kubeadm token create --print-join-command
 sudo swapoff -a
 sudo systemctl start kubelet
 ```
+
+## Докер
+
+```cmd
+ curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+
+## Zappelin
+
+[Оф сайт](https://zeppelin.apache.org/docs/0.11.1/quickstart/kubernetes.html)
