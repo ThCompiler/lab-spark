@@ -1,26 +1,29 @@
 ---
-- name: fish | Set repository
-  template:
-    src: fish.list.j2
-    dest: /etc/apt/sources.list.d/shells:fish:release:3.list
-    mode: "0644"
-  changed_when: true
-- name: fish | Download repository key
-  get_url:
-    url: https://download.opensuse.org/repositories/shells:fish:release:3/Debian_12/Release.key
-    dest: ./Release.key
-    mode: "0644"
-  changed_when: true
-- name: fish | Set repository key
-  shell: set -o pipefail && cat ./Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
-  args:
-    executable: /bin/bash
-  changed_when: true
-- name: fish | Clear tmp files
-  file:
-    state: absent
-    path: ./Release.key
-  changed_when: true
+# - name: fish | Set repository
+#   template:
+#     src: fish.list.j2
+#     dest: /etc/apt/sources.list.d/shells:fish:release:3.list
+#     mode: "0644"
+#   changed_when: true
+# - name: fish | Download repository key
+#   get_url:
+#     url: https://download.opensuse.org/repositories/shells:fish:release:3/Debian_12/Release.key
+#     dest: ./Release.key
+#     mode: "0644"
+#   changed_when: true
+# - name: fish | Set repository key
+#   shell: set -o pipefail && cat ./Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
+#   args:
+#     executable: /bin/bash
+#   changed_when: true
+# - name: fish | Clear tmp files
+#   file:
+#     state: absent
+#     path: ./Release.key
+#   changed_when: true
+- name: Add specified repository into sources list
+  ansible.builtin.apt_repository:
+    repo: ppa:fish-shell/release-3
 - name: fish | Update apt
   apt:
     update_cache: true
