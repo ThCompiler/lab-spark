@@ -19,6 +19,8 @@ passwords:
 
 Если не дебиан то поменять для крио соответствующий тип машины в group_vars в соответсвии с https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/.
 
+Надо устноваить ансибл по инструкции из этой [ссылки](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
+
 Указать пароли в secret.yml
 
 ```cmd
