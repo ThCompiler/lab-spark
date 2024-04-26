@@ -47,6 +47,14 @@
     sed -i '/swap/s/^/#/' /etc/fstab
   changed_when: false
 
+- name: Enable kernel modules
+  shell: |
+    modprobe overlay -v
+    modprobe br_netfilter -v
+    echo "overlay" >> /etc/modules
+    echo "br_netfilter" >> /etc/modules
+  changed_when: true
+
 - name: Enable port forwarding
   sysctl:
     name: net.ipv4.ip_forward
@@ -72,14 +80,6 @@
     sysctl_file: /etc/sysctl.conf
     state: present
     reload: true
-
-- name: Enable kernel modules
-  shell: |
-    modprobe overlay -v
-    modprobe br_netfilter -v
-    echo "overlay" >> /etc/modules
-    echo "br_netfilter" >> /etc/modules
-  changed_when: true
   
 - name: Install fish
   include_tasks: fish.yml
