@@ -44,35 +44,42 @@ ansible-playbook playbooks/master.yml
 sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.24.0.0/16 --dry-run
 sudo kubeadm init --apiserver-advertise-address=<ip of master> --control-plane-endpoint=<ip of master> --upload-certs --pod-network-cidr 10.24.0.0/16
 ```
+Настриваем kubectl
+```cmd
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
 
 Устанавливаем аддон для сети
 
 ```cmd
-sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features.yaml
+curl -O https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
+curl -O https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/custom-resources.yaml
 ```
 
-Проверяем что kube-router работает
+Обновляем ip под выбранный нами диапазон
+
 ```cmd
-sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods -A
+sed -ie 's/192.168.0.0/10.24.0.0/g' custom-resources.yaml
+```
+
+Применяем аддон
+```cmd
+kubectl create -f tigera-operator.yaml
+kubectl create -f custom-resources.yaml
+```
+
+Дожидаемся кода всё станет в запушшеном состоянии
+```cmd
+kubectl get pods -A
 ```
 
 Если они не запустились, возможно данная команда поможет
 ```cmd
 update-alternatives --set iptables /usr/sbin/iptables-legacy
 update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-```
-
-
-Удаляем стандартный proxy
-```cmd
-sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl -n kube-system delete ds kube-proxy
-```
-
-Настриваем kubectl
-```cmd
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 Из этой команды получаем инструкцию для подключения node
