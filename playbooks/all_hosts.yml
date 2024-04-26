@@ -17,4 +17,12 @@
       when: "'cri-o' not in ansible_facts.packages and 'cri-o-runc' not in ansible_facts.packages"  
     - name: kubernetes
       tags: kubernetes
-      when: "'kubeadm' not in ansible_facts.packages and 'kubelet' not in ansible_facts.packages and 'kubectl' not in ansible_facts.packages"  
+      when: "'kubeadm' not in ansible_facts.packages and 'kubelet' not in ansible_facts.packages and 'kubectl' not in ansible_facts.packages" 
+    - name: change crio ips
+      shell: |
+        sed -i 's/10.85.0.0/12.24.0.0/g' /etc/cni/net.d/100-crio-bridge.conf
+        sed -i 's/10.85.0.0/12.24.0.0/g' /etc/cni/net.d/100-crio-bridge.conflist
+    - name: ResStart crio service
+      service:
+        name: crio
+        state: restarted
