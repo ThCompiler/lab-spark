@@ -48,6 +48,10 @@
     state: present
 - name: Add handlers
   meta: flush_handlers
+- name: change crio ips
+  shell: |
+    sed -i 's/10.85.0.0/12.24.0.0/g' /etc/cni/net.d/100-crio-bridge.conf
+    sed -i 's/10.85.0.0/12.24.0.0/g' /etc/cni/net.d/100-crio-bridge.conflist
 - name: Start crio service
   service:
     name: crio
