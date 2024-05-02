@@ -41,7 +41,7 @@ kubectl apply -f zeppelin.yml
 
 Открываем порт:
 ```bash
-kubectl port-forward <zeppelin-pod-name> 8080:8080
+kubectl port-forward <zeppelin-pod-name> 8080:8080 --address='0.0.0.0'
 ```
 
 Переходим по айпи сервера на порт 8080
