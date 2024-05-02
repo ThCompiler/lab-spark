@@ -48,3 +48,8 @@ kubectl port-forward <zeppelin-pod-name> 8080:8080
 
 
 [Оф сайт](https://zeppelin.apache.org/docs/0.11.0/quickstart/kubernetes.html)
+
+Утилиты:
+```bash
+eval $(minikube docker-env)
+```
