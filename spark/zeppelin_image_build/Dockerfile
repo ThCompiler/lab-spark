@@ -19,13 +19,16 @@ FROM thecompiler1941/spark:3.4.2_v1
 
 ENV ZEPPELIN_VER  0.11.0
 
-RUN curl https://dlcdn.apache.org/zeppelin/zeppelin-${ZEPPELIN_VER}/zeppelin-${ZEPPELIN_VER}-bin-all.tgz | \
+RUN mkdir -p /opt && \
+    cd /opt && \
+    curl https://dlcdn.apache.org/zeppelin/zeppelin-${ZEPPELIN_VER}/zeppelin-${ZEPPELIN_VER}-bin-all.tgz | \
         tar -zx && \
     ln -s zeppelin-${ZEPPELIN_VER}-bin-all zeppelin && \
-    echo Zeppelin ${ZEPPELIN_VER} installed
+    echo Zeppelin ${ZEPPELIN_VER} installed in /opt
 
-ADD zeppelin-log4j.properties ./zeppelin/conf/log4j.properties
-ADD zeppelin-env.sh ./zeppelin/conf/zeppelin-env.sh
-ADD docker-zeppelin.sh ./zeppelin/bin/docker-zeppelin.sh
+ADD zeppelin-log4j.properties /opt/zeppelin/conf/log4j.properties
+ADD zeppelin-env.sh /opt/zeppelin/conf/zeppelin-env.sh
+ADD docker-zeppelin.sh ./docker-zeppelin.sh
 EXPOSE 8080
-ENTRYPOINT ["/bin/bash", "./zeppelin/bin/docker-zeppelin.sh"]
+ENV PATH $PATH:/opt/zeppelin/bin
+ENTRYPOINT ["/bin/bash", "/docker-zeppelin.sh"]

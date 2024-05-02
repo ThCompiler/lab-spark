@@ -19,5 +19,5 @@ export ZEPPELIN_CONF_DIR="${ZEPPELIN_HOME}/conf"
 
 echo "=== Launching Zeppelin under Docker ==="
 #/opt/zeppelin/bin/zeppelin.sh "${ZEPPELIN_CONF_DIR}"
-/opt/zeppelin/bin/zeppelin-daemon.sh start
+zeppelin-daemon.sh start
 tail -f ${ZEPPELIN_HOME}/logs/*

@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: spark-worker
+spec:
+  selector:
+    matchLabels:
+      app: spark-worker # has to match .spec.template.metadata.labels
+  serviceName: "spark-worker"
+  replicas: 2 # by default is 1
+  minReadySeconds: 120 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: spark-worker # has to match .spec.selector.matchLabels
+    spec:
+      volumes:
+        - name: spark-hdfs-configmap
+          configMap:
+            name: spark-hdfs-configmap
+      terminationGracePeriodSeconds: 120
+      containers:
+      - image: thecompiler1941/sparkb:3.4.1
+        name: bitnami-spark-worker
+        resources:
+           requests:
+            memory: "2Gi"
+            cpu: "500m"
+           limits:
+            memory: "2Gi"
+            cpu: "800m"
+        ports:
+        - containerPort: 8081
+          name: spark-ui
+        env:
+        - name: SPARK_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: spark-hdfs-configmap
+              key: sparkmodeworker
+        - name: SPARK_MASTER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: spark-hdfs-configmap
+              key: sparkmasterurl
+  volumeClaimTemplates:
+  - metadata:
+      name: spark-worker
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-worker
+spec:
+  selector:
+    app: spark-worker
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      name: sparkworker
+      port: 8081
+      targetPort: 8081
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sparkhdfs-master-namenode
+spec:
+  selector:
+    matchLabels:
+      app: spark-master # has to match .spec.template.metadata.labels
+  serviceName: "spark-master"
+  replicas: 1 # by default is 1
+  minReadySeconds: 120 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: spark-master # has to match .spec.selector.matchLabels
+    spec:
+      volumes:
+        - name: spark-hdfs-configmap
+          configMap:
+            name: spark-hdfs-configmap
+      terminationGracePeriodSeconds: 120
+      containers:
+      - image: thecompiler1941/sparkb:3.4.1
+        name: spark-master
+        resources:
+           requests:
+            memory: "1Gi"
+            cpu: "500m"
+           limits:
+            memory: "1Gi"
+            cpu: "800m"
+        ports:
+        - containerPort: 7077
+          name: spark-protocol
+        - containerPort: 8080
+          name: spark-ui
+        env:
+        - name: SPARK_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: spark-hdfs-configmap
+              key: sparkmodemaster
+        - name: SPARK_MASTER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: spark-hdfs-configmap
+              key: sparkmasterurl
+  volumeClaimTemplates:
+  - metadata:
+      name: spark-master
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master
+spec:
+  selector:
+    app: spark-master
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      name: sparkmasterui
+      port: 8080
+      targetPort: 8080
+    - protocol: TCP
+      name: sparkmaster
+      port: 7077
+      targetPort: 7077
+---

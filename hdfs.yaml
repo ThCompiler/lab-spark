@@ -1,0 +1,161 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hdfs-datanode
+spec:
+  selector:
+    matchLabels:
+      app: hdfs-datanode # has to match .spec.template.metadata.labels
+  serviceName: "hdfs-datanode"
+  replicas: 2 # by default is 1
+  minReadySeconds: 120 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: hdfs-datanode # has to match .spec.selector.matchLabels
+    spec:
+      volumes:
+        - name: spark-hdfs-configmap
+          configMap:
+            name: spark-hdfs-configmap
+      terminationGracePeriodSeconds: 120
+      containers:
+      - image: gradiant/hdfs-datanode
+        name: hdfs-datanode
+        resources:
+           requests:
+            memory: "1Gi"
+            cpu: "500m"
+           limits:
+            memory: "1Gi"
+            cpu: "800m"
+        env:
+        - name: CORE_CONF_fs_defaultFS
+          valueFrom:
+            configMapKeyRef:
+              name: spark-hdfs-configmap
+              key: namenodeurl
+        volumeMounts:
+            - mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
+              name: spark-hdfs-configmap
+              subPath: hdfs-site.xml
+  volumeClaimTemplates:
+  - metadata:
+      name: hdfs-datanode
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hdfs-datanode
+spec:
+  selector:
+    app: hdfs-datanode
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      name: sparkworker
+      port: 8081
+      targetPort: 8081
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hdfs-namenode
+spec:
+  selector:
+    matchLabels:
+      app: hdfs-namenode # has to match .spec.template.metadata.labels
+  serviceName: "hdfs-namenode"
+  replicas: 1 # by default is 1
+  minReadySeconds: 120 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: hdfs-namenode # has to match .spec.selector.matchLabels
+    spec:
+      volumes:
+        - name: spark-hdfs-configmap
+          configMap:
+            name: spark-hdfs-configmap
+      terminationGracePeriodSeconds: 120
+      containers:
+      - image: gradiant/hdfs-namenode
+        name: hdfs-namenode
+        resources:
+           requests:
+            memory: "1Gi"
+            cpu: "500m"
+           limits:
+            memory: "1Gi"
+            cpu: "800m"
+        env:
+        - name: CORE_CONF_fs_defaultFS
+          valueFrom:
+            configMapKeyRef:
+              name: spark-hdfs-configmap
+              key: namenodebindurl
+        volumeMounts:
+            - mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
+              name: spark-hdfs-configmap
+              subPath: hdfs-site.xml
+            - mountPath: /dataset
+              name: hadoop-dataset
+  volumeClaimTemplates:
+  - metadata:
+      name: hdfs-namenode
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: hadoop-dataset
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hdfs-namenode
+spec:
+  selector:
+    app: hdfs-namenode
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      name: namenode-ui
+      port: 50070
+      targetPort: 50070
+    - protocol: TCP
+      name: namenode-protocol
+      port: 8020
+      targetPort: 8020
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hadoop-dataset-hdfs-namenode
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 50Gi
+  volumeMode: Filesystem
+  accessModes:
+      - ReadWriteOnce
+  hostPath:
+    path: "/dataset"
+  claimRef:
+    name: hadoop-dataset-hdfs-namenode-0
+    namespace: default
+---

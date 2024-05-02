@@ -1,0 +1,26 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sparkmaster
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: sparkmaster
+  template:
+    metadata:
+      labels:
+        component: sparkmaster
+    spec:
+      containers:
+        - name: sparkmaster
+          image: thecompiler1941/spark-2:latest
+          command: ["./spark-master.sh"]
+          ports:
+            - containerPort: 7077
+            - containerPort: 8080
+            - containerPort: 4040
+          resources:
+            requests:
+              cpu: 100m
