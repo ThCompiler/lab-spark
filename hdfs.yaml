@@ -59,9 +59,9 @@ spec:
   clusterIP: None
   ports:
     - protocol: TCP
-      name: sparkworker
-      port: 8081
-      targetPort: 8081
+      name: datanode
+      port: 50010
+      targetPort: 50010
 ---
 apiVersion: apps/v1
 kind: StatefulSet
