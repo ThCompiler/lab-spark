@@ -16,6 +16,8 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 
+Надо перезапустить терминал чтобы изменения применились.
+
 Установка [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/):
 ```bash
 sudo apt-get install -y apt-transport-https ca-certificates curl
