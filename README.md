@@ -6,7 +6,7 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-Устанавливаем (докер)[]:
+Устанавливаем [докер](https://docs.docker.com/engine/install/ubuntu/):
 
 ```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -22,7 +22,7 @@ sudo apt-get update
 sudo apt-get install -y kubectl
 ```
 
-Устанавливаем (minikube)[https://minikube.sigs.k8s.io/docs/start/]
+Устанавливаем [minikube](https://minikube.sigs.k8s.io/docs/start/)
 ```bash
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
