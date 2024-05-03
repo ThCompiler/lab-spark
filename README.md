@@ -30,6 +30,13 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 ```
 
+Настраиваем minikube:
+```bash
+minikube config set cpus 6
+minikube config set memory 10g
+minikube start
+```
+
 Запускаем spark:
 ```
 kubectl apply -f cfg.yml
