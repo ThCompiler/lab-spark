@@ -122,6 +122,12 @@ df.withColumn('word', f.col('value')).groupBy('word').count().sort('count', asce
 print("--- %s seconds ---" % (time.time() - start_time))
 ```
 
+Выключить spark;
+
+```python
+spark.stop()
+```
+
 Утилиты:
 ```bash
 eval $(minikube docker-env)
