@@ -1,5 +1,10 @@
 # Init kuber cluster
 
+Подключеие к машине 
+```bash
+ssh -i <private key> <user>@<ip>
+```
+
 Обновляем систему:
 ```bash
 sudo apt-get update
@@ -42,10 +47,28 @@ minikube config set memory 10g
 minikube start
 ```
 
+Скачиваем этот репозиторий:
+```bash
+git clone 
+```
+
 Запускает jupiter:
 ```bash
 kubectl apply -f jupiter.yml
 ```
+
+Состояние пода можно посмотреть:
+```bash
+kubectl get pods
+```
+
+Перед запуском jupyter, необходимо посмотреть токен доступа с помощью команды:
+```bash
+kubectl logs jupiter-spark-0
+```
+
+![image](https://github.com/ThCompiler/lab-spark/assets/48956541/ec427814-f12f-48e6-a08b-2731d42fbeab)
+
 
 Открываем порт:
 ```bash
