@@ -111,6 +111,17 @@ df.filter(col("value").contains("jk")).select(countDistinct("value")).show()
 print("--- %s seconds ---" % (time.time() - start_time))
 ```
 
+Посчитать число повторений для каждого слова:
+
+```python
+import time
+import pyspark.sql.functions as f
+
+start_time = time.time()
+df.withColumn('word', f.col('value')).groupBy('word').count().sort('count', ascending=False).show()
+print("--- %s seconds ---" % (time.time() - start_time))
+```
+
 Утилиты:
 ```bash
 eval $(minikube docker-env)
