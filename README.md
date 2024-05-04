@@ -1,5 +1,16 @@
 # Init kuber cluster
 
+Создание машины
+Минимальные требования
+6 cpu
+12 ГБ RAM
+40 ГБ Физического диска
+
+При создании виртуальной машины в VK cloud обязательно выбирайте создать подсеть, иначе ничего работать не будет
+
+![image](https://github.com/ThCompiler/lab-spark/assets/48956541/5f8ce04e-da1c-4044-a932-6dd41179dfb4)
+
+
 Подключеие к машине 
 ```bash
 ssh -i <private key> <user>@<ip>
