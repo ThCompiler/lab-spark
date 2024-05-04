@@ -100,6 +100,17 @@ df.select(countDistinct("value")).show()
 print("--- %s seconds ---" % (time.time() - start_time))
 ```
 
+Посчитать количество содержащих:
+
+```python
+import time
+from pyspark.sql.functions import col, countDistinct
+
+start_time = time.time()
+df.filter(col("value").contains("jk")).select(countDistinct("value")).show()
+print("--- %s seconds ---" % (time.time() - start_time))
+```
+
 Утилиты:
 ```bash
 eval $(minikube docker-env)
