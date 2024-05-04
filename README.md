@@ -42,26 +42,63 @@ minikube config set memory 10g
 minikube start
 ```
 
-Запускаем spark:
-```
-kubectl apply -f cfg.yml
-kubectl apply -f spark.yml
-```
-
-Запускает zeppelin:
+Запускает jupiter:
 ```bash
-kubectl apply -f zeppelin.yml
+kubectl apply -f jupiter.yml
 ```
 
 Открываем порт:
 ```bash
-kubectl port-forward <zeppelin-pod-name> 8080:8080 --address='0.0.0.0'
+kubectl port-forward jupiter-spark-0 8080:8888 --address='0.0.0.0'
 ```
 
 Переходим по айпи сервера на порт 8080
 
+Там подключаемся с помощью
+```python
+from pyspark.sql import SparkSession
 
-[Оф сайт](https://zeppelin.apache.org/docs/0.11.0/quickstart/kubernetes.html)
+spark = (SparkSession
+            .builder
+            .master("k8s://https://kubernetes.default.svc:443")
+            .config("spark.executor.instances", "2")
+            .config("spark.kubernetes.container.image", "spark:python3-java17")
+            .getOrCreate()
+        )
+```
+
+Более детальная настройка на оф сайте [spar](https://spark.apache.org/docs/latest/running-on-kubernetes.html)
+
+Загружаем слова:
+
+```python
+import os
+
+os.environ["HADOOP_USER_NAME"] = "root"
+
+df= spark.read.format("text").load("hdfs://212.233.97.126:9000/dataset/words_1.txt")
+```
+
+Загружаем 32 гб слов:
+
+```python
+import os
+
+os.environ["HADOOP_USER_NAME"] = "root"
+
+df= spark.read.format("text").load("hdfs://212.233.97.126:9000/dataset/words_32.txt")
+```
+
+Считаем число уникальных слов:
+
+```python
+import time
+from pyspark.sql.functions import col, countDistinct
+
+start_time = time.time()
+df.select(countDistinct("value")).show()
+print("--- %s seconds ---" % (time.time() - start_time))
+```
 
 Утилиты:
 ```bash
