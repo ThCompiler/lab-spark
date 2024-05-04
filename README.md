@@ -49,8 +49,10 @@ minikube start
 
 Скачиваем этот репозиторий:
 ```bash
-git clone 
+git clone https://github.com/ThCompiler/lab-spark.git
 ```
+
+И переходим в папку гита
 
 Запускает jupiter:
 ```bash
