@@ -1,4 +1,4 @@
-# Play Kylin in docker
+# Apache Kylin Standalone Image on Docker Hub
 
 
 Создание машины
