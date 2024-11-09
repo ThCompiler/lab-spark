@@ -1,4 +1,4 @@
-# Apache Kylin Standalone Image on Docker Hub
+# Run Kylin with Docker
 
 
 Создание машины
@@ -50,7 +50,6 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-
 Устанавливаем [докер](https://docs.docker.com/engine/install/ubuntu/):
 
 ```bash
@@ -63,137 +62,33 @@ sudo usermod -aG docker $USER
 
 Надо перезапустить терминал чтобы изменения применились.
 
-Установка [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/):
+Запуск контейнера на основе [Docker-образа](https://hub.docker.com/r/apachekylin/apache-kylin-standalone):
 ```bash
-sudo apt-get install -y apt-transport-https ca-certificates curl
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubectl
+docker run -d \
+-m 8G \
+-p 7070:7070 \
+-p 7080:7080 \
+-p 8088:8088 \
+-p 50070:50070 \
+-p 8032:8032 \
+-p 8042:8042 \
+-p 2181:2181 \
+apachekylin/apache-kylin-standalone:kylin-4.0.1-mondrian
 ```
 
-Устанавливаем [minikube](https://minikube.sigs.k8s.io/docs/start/)
-```bash
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
-```
+8) В разделе Виртуальные сети-> Настойки firewall необходимо добавить группу безопасности. Назовем ее kylin.
 
-Настраиваем minikube:
-```bash
-minikube config set cpus 6
-minikube config set memory 10g
-minikube start
-```
+![image](https://github.com/user-attachments/assets/0df5d36c-f93d-4790-af1e-b25df24cf248)
 
-Скачиваем этот репозиторий:
-```bash
-git clone https://github.com/ThCompiler/lab-spark.git
-```
+9) В созданной группе безопасности необходимо добавить правила по пробросу портов. Список портов взять из команды запуска контейнера на основе образа.
 
-И переходим в папку гита
+![image](https://github.com/user-attachments/assets/c7d27b4d-b7a3-49c3-9c52-29d74de8f9d2)
 
-Запускает jupiter:
-```bash
-kubectl apply -f jupiter.yml
-```
+![image](https://github.com/user-attachments/assets/e9eb00c1-c06f-4e83-a257-ffa48f0fa0f8)
 
-Состояние пода можно посмотреть:
-```bash
-kubectl get pods
-```
+10) К группе правил kylin необходимо добавить созданную на 7 шаге виртуальную машину (кнопка внизу страницы этого правила)
 
-Перед запуском jupyter, необходимо посмотреть токен доступа с помощью команды:
-```bash
-kubectl logs jupiter-spark-0
-```
+![image](https://github.com/user-attachments/assets/d290548e-d456-46ed-8dca-e0e2313cdbf5)
 
-![image](https://github.com/ThCompiler/lab-spark/assets/48956541/ec427814-f12f-48e6-a08b-2731d42fbeab)
-
-
-Открываем порт:
-```bash
-kubectl port-forward jupiter-spark-0 8080:8888 --address='0.0.0.0'
-```
-
-Переходим по айпи сервера на порт 8080
-
-Там подключаемся с помощью
-```python
-from pyspark.sql import SparkSession
-
-spark = (SparkSession
-            .builder
-            .master("k8s://https://kubernetes.default.svc:443")
-            .config("spark.executor.instances", "2")
-            .config("spark.kubernetes.container.image", "spark:python3-java17")
-            .getOrCreate()
-        )
-```
-
-Более детальная настройка на оф сайте [spar](https://spark.apache.org/docs/latest/running-on-kubernetes.html)
-
-Загружаем слова:
-
-```python
-import os
-
-os.environ["HADOOP_USER_NAME"] = "root"
-
-df= spark.read.format("text").load("hdfs://212.233.97.126:9000/dataset/words_1.txt")
-```
-
-Загружаем 32 гб слов:
-
-```python
-import os
-
-os.environ["HADOOP_USER_NAME"] = "root"
-
-df= spark.read.format("text").load("hdfs://212.233.97.126:9000/dataset/words_32.txt")
-```
-
-Считаем число уникальных слов:
-
-```python
-import time
-from pyspark.sql.functions import col, countDistinct
-
-start_time = time.time()
-df.select(countDistinct("value")).show()
-print("--- %s seconds ---" % (time.time() - start_time))
-```
-
-Посчитать количество содержащих:
-
-```python
-import time
-from pyspark.sql.functions import col, countDistinct
-
-start_time = time.time()
-df.filter(col("value").contains("jk")).select(countDistinct("value")).show()
-print("--- %s seconds ---" % (time.time() - start_time))
-```
-
-Посчитать число повторений для каждого слова:
-
-```python
-import time
-import pyspark.sql.functions as f
-
-start_time = time.time()
-df.withColumn('word', f.col('value')).groupBy('word').count().sort('count', ascending=False).show()
-print("--- %s seconds ---" % (time.time() - start_time))
-```
-
-Выключить spark;
-
-```python
-spark.stop()
-```
-
-Утилиты:
-```bash
-eval $(minikube docker-env)
-```
+Открыть Kylin Web UI: http://<external_ip>/kylin/login
+Авторизация ADMIN KYLIN
