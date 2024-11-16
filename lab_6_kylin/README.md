@@ -124,5 +124,5 @@ apachekylin/apache-kylin-standalone:kylin-4.0.1-mondrian
 Выбираем свой датасет. Открыть его как сводную таблицу. Теперь можно делать срезы и сьроить диаграммы.
 
 
-
+![image](https://github.com/user-attachments/assets/d762dc67-171c-4de4-9766-cc9f031aeedd)
 
