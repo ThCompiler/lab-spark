@@ -90,7 +90,7 @@ apachekylin/apache-kylin-standalone:kylin-4.0.1-mondrian
 
 ![image](https://github.com/user-attachments/assets/d290548e-d456-46ed-8dca-e0e2313cdbf5)
 
-Открыть Kylin Web UI: http://<external_ip>/kylin/login
+Открыть Kylin Web UI: http://<external_ip>:7070/kylin/login
 Авторизация ADMIN KYLIN
 
 ![image](https://github.com/user-attachments/assets/026ff37a-882d-47af-a905-e4c100e647fa)
@@ -121,8 +121,10 @@ apachekylin/apache-kylin-standalone:kylin-4.0.1-mondrian
 
 Пароль: KYLIN
 
-Выбираем свой датасет. Открыть его как сводную таблицу. Теперь можно делать срезы и сьроить диаграммы.
+Выбираем свой датасет. Открыть его как сводную таблицу. Теперь можно делать срезы и сьроить диаграммы. Лучше не выключать инстанс, пока не завершите построение диаграмм. Поскольку данные в excel подтягиваются запросами. На практике получилсь так. 
 
 
 ![image](https://github.com/user-attachments/assets/d762dc67-171c-4de4-9766-cc9f031aeedd)
 
+
+Не забудьте удалить инстанс, когда завершите лабораторную. Это важно, так как за аренду ресурсов взимается плата.
