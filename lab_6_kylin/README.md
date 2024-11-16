@@ -95,18 +95,27 @@ apachekylin/apache-kylin-standalone:kylin-4.0.1-mondrian
 
 ![image](https://github.com/user-attachments/assets/026ff37a-882d-47af-a905-e4c100e647fa)
 
+
 Необходимо выбрать существующий проект learn_kylin. На основе дефолтных таблиц Kylin спроектировать и построить (create+build) свой куб данных. 
 [create_cube](https://kylin.apache.org/docs/4.0.4/tutorial/create_cube)
+
+
 [build](https://kylin.apache.org/docs/4.0.4/tutorial/cube_build_job)
 
 Зайти на Kylin MDX http://<external_ip>:7080/ и создать датасет на основе вашего куба.
+
+
 ![image](https://github.com/user-attachments/assets/c910a7da-320e-48ef-9fea-142ab32b46db)
+
+
 
 В Excel загружаем датасет куба
 ![image](https://github.com/user-attachments/assets/8f2d03bb-f179-4b4e-9c43-7559692038f7)
 
 Имя сервера: http://<external_ip>:7080/mdx/xmla/learn_kylin
+
 Имя пользователя: ADMIN
+
 Пароль: KYLIN
 
 Выбираем свой датасет. Открыть его как сводную таблицу. Теперь можно делать срезы и сьроить диаграммы.
