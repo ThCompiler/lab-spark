@@ -116,6 +116,7 @@ kubectl logs jupiter-spark-0
 
 Открываем порт:
 ```bash
+kubectl expose service jupiter-spark-svc --port=8888 --target-port=8085 --name=jupiter-spark-http
 kubectl port-forward jupiter-spark-0 8080:8888 --address='0.0.0.0'
 ```
 
