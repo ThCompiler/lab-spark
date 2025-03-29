@@ -136,7 +136,7 @@ spark = (SparkSession
 
 Более детальная настройка на оф сайте [spar](https://spark.apache.org/docs/latest/running-on-kubernetes.html)
 
-Загружаем слова:
+Загружаем файл с сообщениями пользователей:
 
 ```python
 import os
@@ -146,16 +146,6 @@ os.environ["HADOOP_USER_NAME"] = "root"
 df= spark.read.format("text").load("hdfs://212.233.97.126:9000/dataset/words_1.txt")
 ```
 
-Загружаем 32 гб слов:
-
-```python
-import os
-
-os.environ["HADOOP_USER_NAME"] = "root"
-
-df= spark.read.format("text").load("hdfs://212.233.97.126:9000/dataset/words_32.txt")
-```
-
 Считаем число уникальных слов:
 
 ```python
@@ -163,7 +153,7 @@ import time
 from pyspark.sql.functions import col, countDistinct
 
 start_time = time.time()
-df.select(countDistinct("value")).show()
+df.select(countDistinct("mesage")).show()
 print("--- %s seconds ---" % (time.time() - start_time))
 ```
 
