@@ -82,6 +82,16 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 ```
 
+Устанавливаем [helm](https://helm.sh/docs/intro/install/)
+На линкус
+```bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+На мак можно через brew:
+```bash
+brew install helm
+```
+
 Настраиваем minikube:
 ```bash
 minikube config set cpus 6
@@ -95,6 +105,16 @@ git clone https://github.com/ThCompiler/lab-spark.git
 ```
 
 И переходим в папку гита
+
+Разворачиваем hdfs:
+```bash
+helm install hdfs hdfs/
+```
+
+Дожидаемся создания всех подов по статусам:
+```bash
+kubectl get pods
+```
 
 Запускает jupiter:
 ```bash
@@ -113,72 +133,63 @@ kubectl logs jupiter-spark-0
 
 ![image](https://github.com/ThCompiler/lab-spark/assets/48956541/ec427814-f12f-48e6-a08b-2731d42fbeab)
 
-
-Открываем порт:
+Разворачиваем входной nginx:
 ```bash
-kubectl expose service jupiter-spark-svc --port=8888 --target-port=8085 --name=jupiter-spark-http
-kubectl port-forward jupiter-spark-0 8080:8888 --address='0.0.0.0'
+kubectl apply -f ingress.yaml
 ```
 
-Переходим по айпи сервера на порт 8080
+Также дожидаемся его запуска и открываем порты:
+```bash
+kubectl port-forward main-nginx-0 8081:8080 8082:8081 8083:8082 --address='0.0.0.0'
+```
+
+Переходим по айпи сервера на порт 8081
 
 Там подключаемся с помощью
 ```python
 from pyspark.sql import SparkSession
 
 spark = (SparkSession
-            .builder
-            .master("k8s://https://kubernetes.default.svc:443")
-            .config("spark.executor.instances", "2")
-            .config("spark.kubernetes.container.image", "spark:python3-java17")
-            .getOrCreate()
-        )
+             .builder
+             .master("k8s://https://kubernetes.default.svc:443")
+             .config("spark.executor.instances", "2")
+             .config("spark.kubernetes.container.image", "spark:3.5.1-java17-python3")
+             .getOrCreate()
+         )
 ```
 
 Более детальная настройка на оф сайте [spar](https://spark.apache.org/docs/latest/running-on-kubernetes.html)
 
+Сейчас спарк поднимает поды с воркерами для распределения тасок. Поа ждём их поднятия открывает
+http://<host>:8081/browser/tmp/
+
+Тыкаем на кнопку загрузить файл.
+
+Ждём кода доподнимутся поды pyspark.
+
+После того как они перешли в статус Running. 
 Загружаем файл с сообщениями пользователей:
 
 ```python
 import os
 
-os.environ["HADOOP_USER_NAME"] = "root"
+os.environ["HADOOP_USER_NAME"] = "hduser"
 
-df= spark.read.format("text").load("hdfs://212.233.97.126:9000/dataset/words_1.txt")
+df= spark.read.options(delimiter=";", header=True).csv('hdfs://hdfs-namenode:8020/tmp/info_user3.csv')
 ```
 
-Считаем число уникальных слов:
+к примеру посчитаем число уникальных юзеров:
 
 ```python
 import time
 from pyspark.sql.functions import col, countDistinct
 
 start_time = time.time()
-df.select(countDistinct("mesage")).show()
+df.select(countDistinct("user_id")).show()
 print("--- %s seconds ---" % (time.time() - start_time))
 ```
 
-Посчитать количество содержащих:
-
-```python
-import time
-from pyspark.sql.functions import col, countDistinct
-
-start_time = time.time()
-df.filter(col("value").contains("jk")).select(countDistinct("value")).show()
-print("--- %s seconds ---" % (time.time() - start_time))
-```
-
-Посчитать число повторений для каждого слова:
-
-```python
-import time
-import pyspark.sql.functions as f
-
-start_time = time.time()
-df.withColumn('word', f.col('value')).groupBy('word').count().sort('count', ascending=False).show()
-print("--- %s seconds ---" % (time.time() - start_time))
-```
+Дальше необходимо выполнить аналогично с 1 и 2 лабораторной действия и посчитать время потраченное на эти операции.
 
 Выключить spark;
 

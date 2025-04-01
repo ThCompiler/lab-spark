@@ -1,10 +1,7 @@
 apiVersion: v1
 data:
-  sparkmodeworker: worker
-  sparkmodemaster: master
   namenodeurl: hdfs://hdfs-namenode:8020
   namenodebindurl: hdfs://0.0.0.0:8020
-  sparkmasterurl: spark://spark-master:7077
   hdfs-site.xml: |
     <?xml version="1.0" encoding="UTF-8"?>
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>

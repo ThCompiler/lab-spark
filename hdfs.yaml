@@ -20,7 +20,7 @@ spec:
             name: spark-hdfs-configmap
       terminationGracePeriodSeconds: 120
       containers:
-      - image: gradiant/hdfs-datanode
+      - image: gradiant/hdfs
         name: hdfs-datanode
         resources:
            requests:
@@ -85,7 +85,7 @@ spec:
             name: spark-hdfs-configmap
       terminationGracePeriodSeconds: 120
       containers:
-      - image: gradiant/hdfs-namenode
+      - image: gradiant/hdfs
         name: hdfs-namenode
         resources:
            requests:
