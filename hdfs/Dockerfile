@@ -6,7 +6,7 @@
 #         wget \
 #         openjdk-8-jdk \
 #     && apt-get clean
-FROM eclipse-temurin:8-jdk-focal
+FROM --platform=$BUILDPLATFORM eclipse-temurin:8-jdk-focal
 RUN apt-get update -y \
     && export DEBIAN_FRONTEND=noninteractive && apt-get install -y --no-install-recommends \
         sudo \

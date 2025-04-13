@@ -3,11 +3,11 @@
 images:
   hdfs:
     repository: thecompiler1941/hdfs
-    tag: v2_3.2.3
+    tag: v3_3.2.3
     pullPolicy: IfNotPresent
   hdfsUI:
     repository: thecompiler1941/hdfs-ui
-    tag: v3.2
+    tag: v3.3
     pullPolicy: IfNotPresent
 
 # Select antiAffinity as either hard or soft, default is 'soft'
